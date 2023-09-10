@@ -58,7 +58,6 @@ public class ClientService {
         if(client == null){
             throw new ApiException("Client not found");
         }
-        //User user = authRepository.findUserById(user_id);
         if(!client.getUser().getClient().getId().equals(user_id)){
             throw new ApiException("Assess denied");
         }

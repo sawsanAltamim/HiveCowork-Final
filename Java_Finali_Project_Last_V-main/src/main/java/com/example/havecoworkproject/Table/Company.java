@@ -2,6 +2,7 @@ package com.example.havecoworkproject.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,12 +21,17 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotEmpty(message = "Company Name must not be empty")
+    @Column(columnDefinition = "varchar(20) not null")
     private String nameCompany;
+
     private Boolean acceptable = false;
 
-
+    @NotEmpty(message = "Location must not be empty")
+    @Column(columnDefinition = "varchar(20) not null")
     private String location;
 
+    @Column(columnDefinition = "varchar(200) not null")
     private String description;
 
     @OneToOne

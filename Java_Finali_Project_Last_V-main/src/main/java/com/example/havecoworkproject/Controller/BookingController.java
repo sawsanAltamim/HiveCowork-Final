@@ -4,6 +4,7 @@ import com.example.havecoworkproject.Api.ApiResponse;
 import com.example.havecoworkproject.Service.BookingService;
 import com.example.havecoworkproject.Table.Booking;
 import com.example.havecoworkproject.Table.User;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,14 +45,14 @@ public class BookingController {
     @PutMapping("/update/{booking_id}")
     public ResponseEntity confirmBooking(@AuthenticationPrincipal User user,@PathVariable Integer booking_id){
 
-        bookingService.confirmBooking( booking_id);
+        bookingService.confirmBooking( user.getId(),booking_id);
         return ResponseEntity.status(200).body(new ApiResponse("updated successfully"));
 
     }
     @DeleteMapping("/delete/{booking_id}/{office_id}/{schedule_id}")
     public ResponseEntity cancelBooking(@AuthenticationPrincipal User user, @PathVariable Integer booking_id, @PathVariable Integer office_id, @PathVariable Integer schedule_id){
 
-        bookingService. cancelBooking( booking_id, office_id, schedule_id);
+        bookingService. cancelBooking(user.getId(),booking_id, office_id, schedule_id);
         return ResponseEntity.status(200).body(new ApiResponse("delete successfully"));
 
     }
@@ -81,7 +82,7 @@ public class BookingController {
     }
 
     @PostMapping("/newExtendBooking/{office_id}/{booking_id}/{schedule_id}")
-    public ResponseEntity newExtendBooking(@AuthenticationPrincipal User user,@RequestBody Booking booking,@PathVariable Integer office_id, @PathVariable List<Integer> schedule_id){
+    public ResponseEntity newExtendBooking(@AuthenticationPrincipal User user, @RequestBody @Valid Booking booking, @PathVariable Integer office_id, @PathVariable List<Integer> schedule_id){
         bookingService. newExtendBooking(user.getId(), booking,office_id,schedule_id);
         return ResponseEntity.status(200).body(new ApiResponse("added successfully"));
     }

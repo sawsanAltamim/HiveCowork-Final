@@ -37,7 +37,7 @@ public class Booking {
     private LocalDateTime endDate;
 
     @NotNull(message = "Price is null")
-    @Positive(message = "Price should be positive null")
+    @Positive(message = "Price should be positive")
     @Column(columnDefinition = "double not null")
     private Double price;
 

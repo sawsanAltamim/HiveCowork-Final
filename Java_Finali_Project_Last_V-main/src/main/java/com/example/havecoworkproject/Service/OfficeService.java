@@ -107,4 +107,11 @@ public class OfficeService {
     offices.sort(Comparator.comparing(Office::getAvgRating).reversed());
     return offices;
   }
+
+  public List<Office> getAllOfficesOrderByPrice() {
+    List<Office> offices = officeRepository.findAll();
+    offices.sort(Comparator.comparing(Office::getPrice));
+
+    return offices;
+  }
 }

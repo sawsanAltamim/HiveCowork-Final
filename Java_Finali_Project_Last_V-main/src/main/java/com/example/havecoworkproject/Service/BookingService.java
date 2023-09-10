@@ -63,11 +63,13 @@ public class BookingService {
 
     }
 
-    //company
-    public void confirmBooking(Integer id) {
-        Booking booking = bookingRepository.findBookingById(id);
+    public void confirmBooking(Integer company_id,Integer Booking_id) {
+        Booking booking = bookingRepository.findBookingById(Booking_id);
         if (booking == null) {
             throw new ApiException("booking is not found");
+        }
+        if(!booking.getCompany().getId().equals(company_id)){
+            throw new ApiException(("Unauthorized"));
         }
         booking.setStutas("Confirm");
         bookingRepository.save(booking);
@@ -75,18 +77,21 @@ public class BookingService {
     }
 
     //company OR clinet
-    public void cancelBooking(Integer booking_id, Integer office_id, Integer schedule_id) {
+    public void cancelBooking(Integer company_id,Integer booking_id, Integer office_id, Integer schedule_id) {
         Booking booking = bookingRepository.findBookingById(booking_id);
         Office office = booking.getOffice();
         if (booking == null) {
             throw new ApiException("booking is not found");
+        }
+        if(!booking.getCompany().getId().equals(company_id)){
+            throw new ApiException(("Unauthorized"));
         }
         booking.setStutas("Cancel");
         scheduleRepository.findScheduleByOfficeAndId(office, schedule_id).setIsAvailable(true);
         bookingRepository.save(booking);
 
 
-    }
+}
 
     public List<Booking> getAllPendingBookingsByClientId(Integer client_id) { // done
         Client client = clientRepository.findClientById(client_id);

@@ -55,6 +55,12 @@ public class OfficeController {
         return ResponseEntity.status(HttpStatus.OK).body(sortedOffices);
     }
 
+    @GetMapping("/all-sorted-by-price")
+    public ResponseEntity getAllOfficesSortedByPrice() {
+        List<Office> sortedOffices = officeService.getAllOfficesOrderByPrice();
+        return ResponseEntity.status(HttpStatus.OK).body(sortedOffices);
+    }
+
     /*@GetMapping("/Search/{numberPerson}")
     public ResponseEntity SearchNumberPerson(@PathVariable Integer numberPerson) {
         return ResponseEntity.status(200).body(officeService.SearchNumberPerson(numberPerson));
