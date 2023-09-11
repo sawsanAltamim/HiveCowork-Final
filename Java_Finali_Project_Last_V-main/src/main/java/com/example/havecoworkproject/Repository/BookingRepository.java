@@ -11,6 +11,8 @@ import java.util.List;
 public interface BookingRepository extends JpaRepository<Booking,Integer> {
 
 
+    Booking findTopByOrderByIdDesc();
+
     Booking findBookingById(Integer id);
 
     //List<Booking> findByClient_IdAndStutas(Integer clientId, String status);

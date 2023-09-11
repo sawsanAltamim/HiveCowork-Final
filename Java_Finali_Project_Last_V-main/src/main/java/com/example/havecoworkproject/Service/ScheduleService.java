@@ -48,7 +48,7 @@ public class ScheduleService {
     }
 
     //clinet
-    public void updateSchedule(Integer company_id,Integer office_id, Integer schedule_id) { // done
+    public void updateSchedule(Integer company_id,Integer office_id,Integer schedule_id) { // done
         Office office = officeRepository.findOfficeById(office_id);
         Schedule schedule = scheduleRepository.findScheduleByOfficeAndId(office, schedule_id);
         Company company = companyRepository.findCompanyById(company_id);

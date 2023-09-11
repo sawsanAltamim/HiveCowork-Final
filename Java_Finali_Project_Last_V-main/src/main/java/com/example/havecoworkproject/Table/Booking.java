@@ -10,11 +10,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.mapping.Set;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -30,16 +31,16 @@ public class Booking {
 
     private String companyName = "name";
 
-    @JsonFormat(pattern = "dd/MM/yyyy hh:mm:ss a")
-    private LocalDateTime startDate;
+    //@JsonFormat(pattern = "dd/MM/yyyy hh:mm:ss a")
+    private LocalDateTime startDate; //= LocalDateTime.now();
 
-    @JsonFormat(pattern = "dd/MM/yyyy hh:mm:ss a")
-    private LocalDateTime endDate;
+    //@JsonFormat(pattern = "dd/MM/yyyy hh:mm:ss a")
+    private LocalDateTime endDate;//= LocalDateTime.now();
 
-    @NotNull(message = "Price is null")
-    @Positive(message = "Price should be positive")
+    //@NotNull(message = "Price is null")
+    //@Positive(message = "Price should be positive")
     @Column(columnDefinition = "double not null")
-    private Double price;
+    private Double price = 0.0;
 
     @Column(columnDefinition = "varchar(20) not null")
     private String stutas = "Pending";
@@ -62,5 +63,12 @@ public class Booking {
     @JoinColumn(name = "office_id",referencedColumnName = "id")
     @JsonIgnore
     private Office office;
+
+//   @OneToMany( cascade = CascadeType.ALL, mappedBy = "booking")
+//   private Set<Booking> bookings;
+
+
+    @OneToMany( cascade = CascadeType.ALL, mappedBy = "booking")
+    private Set<Schedule> schedules;
 
 }

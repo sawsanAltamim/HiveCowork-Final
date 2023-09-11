@@ -22,8 +22,8 @@ public class ServicesController {
        // return ResponseEntity.status(200).body(serviceService.getAllServices());
    // }
 
-    @GetMapping("/get_by_company/{office_id}")
-    public ResponseEntity getAllService(@AuthenticationPrincipal User user, @PathVariable Integer office_id){
+    @GetMapping("/get_by_office/{office_id}")
+    public ResponseEntity getAllServiceByOffice(@AuthenticationPrincipal User user, @PathVariable Integer office_id){
         return ResponseEntity.status(200).body(serviceService.getServicesByOffice(user.getId(),office_id));
     }
     @PostMapping("/add/{office_id}")

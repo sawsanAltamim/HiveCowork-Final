@@ -1,6 +1,7 @@
 package com.example.havecoworkproject.Controller;
 
 import com.example.havecoworkproject.Api.ApiResponse;
+import com.example.havecoworkproject.DTO.ScheduleDTO;
 import com.example.havecoworkproject.Service.BookingService;
 import com.example.havecoworkproject.Table.Booking;
 import com.example.havecoworkproject.Table.User;
@@ -34,14 +35,15 @@ public class BookingController {
 
     }
 
-    @PostMapping("/add/{office_id}/{schedule_id}")
-    public ResponseEntity newBooking(@AuthenticationPrincipal User user, @RequestBody Booking booking, @PathVariable Integer office_id, @PathVariable List<Integer> schedule_id){
+    @PostMapping("/add/{office_id}")
+    public ResponseEntity newBooking(@AuthenticationPrincipal User user, @RequestBody @Valid ScheduleDTO scheduleDTO, @PathVariable Integer office_id){
 
-        bookingService.newBooking(user.getId(), booking,office_id,schedule_id);
+        bookingService.newBooking(user.getId(),scheduleDTO,office_id);
         return ResponseEntity.status(200).body(new ApiResponse("added successfully"));
 
     }
 
+    //company
     @PutMapping("/update/{booking_id}")
     public ResponseEntity confirmBooking(@AuthenticationPrincipal User user,@PathVariable Integer booking_id){
 
@@ -49,6 +51,7 @@ public class BookingController {
         return ResponseEntity.status(200).body(new ApiResponse("updated successfully"));
 
     }
+    //company
     @DeleteMapping("/delete/{booking_id}/{office_id}/{schedule_id}")
     public ResponseEntity cancelBooking(@AuthenticationPrincipal User user, @PathVariable Integer booking_id, @PathVariable Integer office_id, @PathVariable Integer schedule_id){
 

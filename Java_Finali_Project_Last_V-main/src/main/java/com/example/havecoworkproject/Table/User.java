@@ -33,7 +33,7 @@ public class User implements UserDetails {
 
     @NotEmpty
     //@Column(columnDefinition = "varchar(20) not null")
-    @Pattern(regexp = "^[A-Za-z\\s]{1,}[0-9\\s]{1,}", message = "Please enter a valid password") // ممكن ماتضبط
+    //@Pattern(regexp = "^[A-Za-z\\s]{1,}[0-9\\s]{1,}", message = "Please enter a valid password") // ممكن ماتضبط
     private String password;
     private String role;
 

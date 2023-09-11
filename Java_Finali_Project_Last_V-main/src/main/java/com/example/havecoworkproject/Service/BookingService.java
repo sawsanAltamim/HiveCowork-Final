@@ -1,6 +1,7 @@
 package com.example.havecoworkproject.Service;
 
 import com.example.havecoworkproject.Api.ApiException;
+import com.example.havecoworkproject.DTO.ScheduleDTO;
 import com.example.havecoworkproject.Repository.*;
 import com.example.havecoworkproject.Table.*;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,8 @@ public class BookingService {
 
         return bookingRepository.findBookingsByCompanyId(user_id);
     }
-
-    public void newBooking(Integer clinet_id, Booking booking, Integer office_id, List<Integer> schedules_id) {
+//+, Booking booking, Integer office_id
+    public void newBooking(Integer clinet_id,ScheduleDTO scheduleDTO,Integer office_id) { //List<Integer> schedules_id
         Office office = officeRepository.findOfficeById(office_id);
         Client client = clientRepository.findClientById(clinet_id);
         if (office == null) {
@@ -39,27 +40,71 @@ public class BookingService {
         if (client == null) {
             throw new ApiException("client not found");
         }
+
+
+        Booking booking = new Booking();
+
         booking.setOffice(office);
         booking.setClient(client);
         booking.setCompany(booking.getCompany());
+
+
+        List<Integer> schedules_id =scheduleDTO.getBookingSchedle();
+
         Integer hours = schedules_id.size();
-        Double totalePrice = booking.getPrice() * hours;
+        Double totalePrice = office.getPrice() * hours;
         booking.setPrice(totalePrice);
         booking.setCompanyName(office.getCompanyName());
-        // bookingRepository.save(booking);
-        for (Integer id : schedules_id) {
-            if (scheduleRepository.findScheduleByOfficeAndId(office, id).getIsAvailable() == false) {
-                throw new ApiException("Unavailable time");
-            }
-
-            checkScheduleWithinOfficeHours(scheduleRepository.findScheduleByOfficeId(id), office.getId());
-
-        }
-        for (Integer id : schedules_id) {
-            scheduleRepository.findScheduleByOfficeAndId(office, id).setIsAvailable(false);
-        }
+        booking.setStartDate(scheduleRepository.findScheduleById(schedules_id.get(0)).getStartDate());
+        booking.setEndDate(scheduleRepository.findScheduleById(schedules_id.get(schedules_id.size()-1)).getStartDate().plusHours(1));
+        //booking.setStartDate(scheduleDTO.getEndDate());
+        booking.setReason(scheduleDTO.getReason());
 
         bookingRepository.save(booking);
+
+        Booking booking1 = bookingRepository.findTopByOrderByIdDesc();
+
+        for(Integer id:schedules_id){
+            Schedule schedule = scheduleRepository.findScheduleById(id);
+            schedule.setBooking(booking1);
+        }
+
+
+
+
+
+
+
+
+
+
+//
+//        Integer hours = schedules_id.size();
+//        Double totalePrice = office.getPrice() * hours;
+//        booking.setPrice(totalePrice);
+//        //booking.setPrice(office.getPrice());
+//        booking.setCompanyName(office.getCompanyName());
+//
+//       // booking.setStartDate(scheduleRepository.findScheduleById(schedules_id).getStartDate());
+//        booking.setStartDate(scheduleRepository.findScheduleById(schedules_id.get(0)).getStartDate());
+//
+//       // booking.setEndDate(scheduleRepository.findScheduleById(schedules_id).getStartDate().plusHours(1));
+//        booking.setEndDate(scheduleRepository.findScheduleById(schedules_id.get(schedules_id.size()-1)).getStartDate().plusHours(1));
+//        // bookingRepository.save(booking);
+//        for (Integer id : schedules_id) {
+//           if (scheduleRepository.findScheduleByOfficeAndId(office, id).getIsAvailable() == false) {
+//               throw new ApiException("Unavailable time");
+//           }
+//
+//            checkScheduleWithinOfficeHours(scheduleRepository.findScheduleByOfficeId(office.getId()), office.getId());
+//
+//        }
+//        for (Integer id : schedules_id) {
+//
+//            scheduleRepository.findScheduleByOfficeAndId(office, id).setIsAvailable(false);
+//        }
+//
+//        bookingRepository.save(booking);
 
     }
 

@@ -36,5 +36,8 @@ public class Schedule {
     @JsonIgnore
     private Office office;
 
-
+    @ManyToOne
+    @JoinColumn(name = "booking_id",referencedColumnName = "id")
+    @JsonIgnore
+    private Booking booking;
 }

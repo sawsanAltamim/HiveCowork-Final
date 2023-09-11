@@ -24,7 +24,7 @@ public class Office {
 
     @NotNull
     @Positive
-    private double price;
+    private Double price;
 
     private String companyName = "name";
 
