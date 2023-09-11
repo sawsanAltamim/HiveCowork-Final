@@ -84,23 +84,22 @@ public class BookingController {
         return ResponseEntity.status(HttpStatus.OK).body(confirmBookings);
     }
 
-    @PostMapping("/newExtendBooking/{office_id}/{booking_id}/{schedule_id}")
+    /*@PostMapping("/newExtendBooking/{office_id}/{booking_id}/{schedule_id}")
     public ResponseEntity newExtendBooking(@AuthenticationPrincipal User user, @RequestBody @Valid Booking booking, @PathVariable Integer office_id, @PathVariable List<Integer> schedule_id){
         bookingService. newExtendBooking(user.getId(), booking,office_id,schedule_id);
         return ResponseEntity.status(200).body(new ApiResponse("added successfully"));
-    }
+    }*/
 
     @PutMapping("/complete/{bookingId}")
     public ResponseEntity completeBooking(@AuthenticationPrincipal User user ,@PathVariable Integer bookingId) {
         bookingService.BookingIsComplete(user.getId(), bookingId);
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("Booking marked as complete"));
     }
-
-   /* @PutMapping("/cancel-office-booking/{bookingId}/{officeId}")
-    public ResponseEntity<ApiResponse> cancelOfficeBooking(@AuthenticationPrincipal User user,@PathVariable Integer bookingId, @PathVariable List<Integer> scheduleIds, @PathVariable Integer officeId) {
-        bookingService.cancelOfficeBooking(user.getId(), bookingId, officeId, scheduleIds);
+    @PutMapping("/cancel-office-booking/{booking_id}")
+    public ResponseEntity<ApiResponse> cancelOfficeBooking(@AuthenticationPrincipal User user,@PathVariable Integer booking_id) {
+        bookingService.cancelOfficeBooking(user.getId(), booking_id);
         return ResponseEntity.ok(new ApiResponse("Office booking canceled successfully"));
-    }*/
+    }
 
     /*@PostMapping("/check-schedule/{office_id}")
     public ResponseEntity checkScheduleWithinOfficeHours(@RequestBody Schedule schedule, @PathVariable Integer office_id) {

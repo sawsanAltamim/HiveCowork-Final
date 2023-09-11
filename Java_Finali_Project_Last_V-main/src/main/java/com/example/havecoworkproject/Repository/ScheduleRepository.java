@@ -1,6 +1,7 @@
 package com.example.havecoworkproject.Repository;
 
 
+import com.example.havecoworkproject.Table.Booking;
 import com.example.havecoworkproject.Table.Office;
 import com.example.havecoworkproject.Table.Schedule;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +18,5 @@ public interface ScheduleRepository extends JpaRepository<Schedule,Integer> {
   Schedule findScheduleByOfficeId(Integer id);
   Schedule findScheduleByOfficeAndId(Office office, Integer schedule_id);
 
+    List<Schedule> findSchedulesByBooking(Booking booking);
 }

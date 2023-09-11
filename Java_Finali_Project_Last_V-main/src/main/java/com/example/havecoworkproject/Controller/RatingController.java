@@ -29,12 +29,7 @@ public class RatingController {
 
     @PostMapping("/add/{office_id}")
     public ResponseEntity addRating(@AuthenticationPrincipal User user, @PathVariable Integer office_id, @RequestBody @Valid Rating rating){
-        ratingService.addRatinToOffice(user.getId(),office_id,rating);
+        ratingService.addRatingToOffice(user.getId(),office_id,rating);
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("Rating added successfully"));
     }
-//    @PutMapping("/{client_id}/assig/{rating_id}")
-//    public ResponseEntity assigSubscriptionTrainee(@PathVariable Integer rating_id, @PathVariable Integer client_id) {
-//        ratingService.assigRatingClient(client_id,rating_id);
-//        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("assig done"));
-//    }
 }

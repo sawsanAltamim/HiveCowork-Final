@@ -33,74 +33,118 @@ public class RatingService {
         }
         return ratingRepository.findRatingByOfficeId(office_id);
     }
-    public void addRatinToOffice (Integer client_id, Integer office_id,Rating rating){
-        Office office = officeRepository.findOfficeById(office_id);
-        Client client = clientRepository.findClientById(client_id);
-        Booking booking = bookingRepository.findBookingByOfficeIdAndClientId(office_id,client_id);
+//    public void addRatinToOffice (Integer client_id, Integer office_id,Rating rating){
+//        Office office = officeRepository.findOfficeById(office_id);
+//        Client client = clientRepository.findClientById(client_id);
+//        Booking booking = bookingRepository.findBookingByOfficeIdAndClientId(office_id,client_id);
+//
+//        if (client == null) {
+//            throw new ApiException("Client not found");
+//        }
+//
+//        if (office == null) {
+//            throw new ApiException("Office not found");
+//        }
+//
+//        if (bookingRepository.findBookingByOfficeIdAndClientId(office_id ,client_id) == null){
+//            throw new ApiException("You can not rating you should booking first");
+//        }
+//
+//        rating.setOffice(office);
+//        rating.setClient(client);
+//        rating.setNumRate(rating.getNumRate());
+//        calculateAverageRating(client_id, rating.getId(),booking.getId());
+//        ratingRepository.save(rating);
+//
+//    }
+//    public void calculateAverageRating(Integer client_id,Integer rating_id,Integer booking_id) {
+//       // Rating rating = ratingRepository.findRatingById(rating_id);
+//       // if (rating == null) {
+//       //     throw new ApiException("Rating not found");
+//      //  }
+//
+//
+//       // Office office = officeRepository.findOfficeById(office_id);
+//     //   Client client = clientRepository.findClientById(client_id);
+//
+////        if (office == null) {
+////            throw new ApiException("Office not found");
+////        }
+//
+//        /*if (client == null) {
+//            throw new ApiException("client not found");
+//        }*/
+//         Booking booking=bookingRepository.findBookingById(booking_id);
+//        Office office = booking.getOffice();
+//        if (!booking.getStutas().equals("Complete")) {
+//            throw new ApiException("booking not Completed");
+//        }
+//            List<Rating> ratings = ratingRepository.findRatingByOfficeId(office.getId());
+//            Integer totalRatings = ratings.size();
+//           // Double sum = 0.0;
+//            Double sum = ratings.stream().mapToDouble(Rating::getNumRate).sum();
+//           // for (Rating rating1 : ratings) {
+//               // sum += rating1.getNumRate();
+//
+//           // }
+//            Double avg = sum / totalRatings;
+//            office.setAvgRating(avg);
+//            officeRepository.save(office);
+//
+//
+//    }
+
+    public void addRatingToOffice(Integer clientId, Integer officeId, Rating rating) {
+        Office office = officeRepository.findOfficeById(officeId);
+        Client client = clientRepository.findClientById(clientId);
+
 
         if (client == null) {
             throw new ApiException("Client not found");
         }
+
         if (office == null) {
             throw new ApiException("Office not found");
         }
-        if (bookingRepository.findBookingByOfficeIdAndClientId(office_id,client_id) == null){
 
-            throw new ApiException("You can not rating you should booking first");
-
+        Booking booking = bookingRepository.findBookingByOfficeIdAndClientId(officeId, clientId);
+        if (booking == null) {
+            throw new ApiException("You cannot rate this office without a booking");
         }
+        if (!booking.getStutas().equals("Complete")) {
+            throw new ApiException("You can only rate an office after completing the booking");
+        }
+
 
         rating.setOffice(office);
         rating.setClient(client);
-        rating.setNumRate(rating.getNumRate());
+
+
         ratingRepository.save(rating);
-        calculateAverageRating(client_id, rating.getId(),booking.getId());
+        calculateAverageRating(officeId);
     }
-    public void calculateAverageRating(Integer client_id,Integer rating_id,Integer booking_id) {
-        Rating rating = ratingRepository.findRatingById(rating_id);
-        if (rating == null) {
-            throw new ApiException("Rating not found");
+
+    public void calculateAverageRating(Integer officeId) {
+
+        Office office = officeRepository.findOfficeById(officeId);
+
+
+        if (office == null) {
+            throw new ApiException("Office not found");
         }
 
 
-       // Office office = officeRepository.findOfficeById(office_id);
-        Client client = clientRepository.findClientById(client_id);
+        List<Rating> ratings = ratingRepository.findRatingByOfficeId(office.getId());
 
-//        if (office == null) {
-//            throw new ApiException("Office not found");
-//        }
 
-        if (client == null) {
-            throw new ApiException("client not found");
-        }
-        Booking booking=bookingRepository.findBookingById(booking_id);
-        Office office = booking.getOffice();
-        if (!booking.getStutas().equals("Completed")) {
-            throw new ApiException("booking not Completed");
-        }
-            List<Rating> ratings = ratingRepository.findRatingByOfficeId(office.getId());
+        if (!ratings.isEmpty()) {
             Integer totalRatings = ratings.size();
-            Double sum = 0.0;
-           // Double sum = ratings.stream().mapToDouble(Rating::getNumRate).sum();
-            for (Rating rating1 : ratings) {
-                sum += rating1.getNumRate();
-
-            }
+            Double sum = ratings.stream().mapToDouble(Rating::getNumRate).sum();
             Double avg = sum / totalRatings;
-
             office.setAvgRating(avg);
-            officeRepository.save(office);
-
-
+        } else {
+            office.setAvgRating(0.0);
+        }
+        officeRepository.save(office);
     }
-//    public void assigRatingClient(Integer client_id, Integer rating_id) {
-//        Rating rating=ratingRepository.getReferenceById(rating_id);
-//        Client client=clientRepository.findClientById(client_id);
-//
-//        if (rating == null || client == null) {
-//            throw new ApiException("ID Client or Rating not found");
-//        }
-//        rating.setClient(client);
-//        ratingRepository.save(rating);
-//    }
 }
