@@ -18,6 +18,8 @@ public class ScheduleDTO {
 
 
 
+    private Integer id;
+
     private List<Integer> bookingSchedle;
 
 

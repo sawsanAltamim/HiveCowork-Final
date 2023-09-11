@@ -18,7 +18,7 @@ public class Rating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
      @NotNull
-    private Integer numRate;
+    private Double numRate;
 
     @ManyToOne
     @JoinColumn(name = "office_id",referencedColumnName = "id")

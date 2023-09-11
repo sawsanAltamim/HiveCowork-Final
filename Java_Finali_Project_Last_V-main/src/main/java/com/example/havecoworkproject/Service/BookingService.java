@@ -20,6 +20,7 @@ public class BookingService {
     private final OfficeRepository officeRepository;
     private final ScheduleRepository scheduleRepository;
     private final AuthRepository authRepository;
+    private final CompanyRepository companyRepository;
 
 
     public List<Booking> getAllBookingsByClient(Integer user_id) {
@@ -31,7 +32,7 @@ public class BookingService {
         return bookingRepository.findBookingsByCompanyId(user_id);
     }
 //+, Booking booking, Integer office_id
-    public void newBooking(Integer clinet_id,ScheduleDTO scheduleDTO,Integer office_id) { //List<Integer> schedules_id
+    /*public void newBooking(Integer clinet_id,ScheduleDTO scheduleDTO,Integer office_id) { //List<Integer> schedules_id
         Office office = officeRepository.findOfficeById(office_id);
         Client client = clientRepository.findClientById(clinet_id);
         if (office == null) {
@@ -67,7 +68,58 @@ public class BookingService {
         for(Integer id:schedules_id){
             Schedule schedule = scheduleRepository.findScheduleById(id);
             schedule.setBooking(booking1);
+        }*/
+
+    public void newBooking(Integer clinet_id,ScheduleDTO scheduleDTO,Integer office_id) { //List<Integer> schedules_id
+        Office office = officeRepository.findOfficeById(office_id);
+        Client client = clientRepository.findClientById(clinet_id);
+        Company company = companyRepository.findCompanyById(office.getCompany().getId());
+        if (office == null) {
+            throw new ApiException("office not found");
         }
+        if (client == null) {
+            throw new ApiException("client not found");
+        }
+
+
+        Booking booking = new Booking();
+
+        booking.setOffice(office);
+        booking.setClient(client);
+        booking.setCompany(company);
+
+
+        List<Integer> schedules_id = scheduleDTO.getBookingSchedle();
+
+        Integer hours = schedules_id.size();
+        Double totalePrice = office.getPrice() * hours;
+        booking.setPrice(totalePrice);
+        booking.setCompanyName(office.getCompanyName());
+        booking.setStartDate(scheduleRepository.findScheduleById(schedules_id.get(0)).getStartDate());
+
+        booking.setEndDate(scheduleRepository.findScheduleById(schedules_id.get(schedules_id.size() - 1)).getStartDate().plusHours(1));
+        //booking.setStartDate(scheduleDTO.getEndDate());
+        booking.setReason(scheduleDTO.getReason());
+
+        bookingRepository.save(booking);
+
+        Booking booking1 = bookingRepository.findTopByOrderByIdDesc();
+
+        for (Integer id : schedules_id) {
+            Schedule schedule = scheduleRepository.findScheduleById(id);
+            if (scheduleRepository.findScheduleByOfficeAndId(office, id).getIsAvailable() == false) {
+                throw new ApiException("Unavailable time");
+            }
+
+            checkScheduleWithinOfficeHours(scheduleRepository.findScheduleByOfficeId(office.getId()), office.getId());
+
+            schedule.setBooking(booking1);
+        }
+
+        for (Integer id : schedules_id) {
+
+            scheduleRepository.findScheduleByOfficeAndId(office, id).setIsAvailable(false);}
+    }
 
 
 
@@ -106,7 +158,7 @@ public class BookingService {
 //
 //        bookingRepository.save(booking);
 
-    }
+
 
     public void confirmBooking(Integer company_id,Integer Booking_id) {
         Booking booking = bookingRepository.findBookingById(Booking_id);
@@ -239,10 +291,10 @@ public class BookingService {
 
             }
             for (Integer id : schedules_id) {
-                scheduleRepository.findScheduleByOfficeAndId(office, id).setIsAvailable(false);
+                Schedule schedule =  scheduleRepository.findScheduleByOfficeAndId(office, id);
+                schedule.setIsAvailable(false);
+                scheduleRepository.save(schedule);
             }
-
-            bookingRepository.save(booking);
         }
     }
 
@@ -258,7 +310,7 @@ public class BookingService {
         LocalDateTime currentDateTime = LocalDateTime.now();
         LocalDateTime bookingEndDate = booking.getEndDate();
 
-        if (currentDateTime.isAfter(bookingEndDate)) {
+        if (currentDateTime.isBefore(bookingEndDate)) {
             booking.setStutas("Complete");
             bookingRepository.save(booking);
         } else {
@@ -267,16 +319,14 @@ public class BookingService {
         }
     }
 
-    public void cancelOfficeBooking(Integer client_id, Integer bookingId, Integer officeId, List<Integer> scheduleIds) { // dpne
+    public void cancelOfficeBooking(Integer client_id,Integer scheduleDTO, Integer bookingId, Integer officeId, List<Integer> scheduleIds) { // dpne
         Booking booking = bookingRepository.findBookingById(bookingId);
         if (booking == null) {
             throw new ApiException("Booking not found");
         }
         if (!booking.getClient().getId().equals(client_id)) {
             throw new ApiException("Access denied. You are not the owner of this booking.");
-
         }
-
         LocalDateTime currentTime = LocalDateTime.now();
         LocalDateTime bookingStartTime = booking.getStartDate();
 
@@ -290,6 +340,8 @@ public class BookingService {
             throw new ApiException("Booking status is not eligible for cancellation.");
         }
 
+
+
         booking.setStutas("Cancel");
         bookingRepository.save(booking);
 
@@ -297,6 +349,8 @@ public class BookingService {
         if (office == null) {
             throw new ApiException("Office not found");
         }
+
+        //List<Integer> schedules_id =scheduleDTO.getBookingSchedle();
 
         for (Integer scheduleId : scheduleIds) {
             Schedule schedule = scheduleRepository.findScheduleByOfficeAndId(office, scheduleId);
@@ -306,7 +360,6 @@ public class BookingService {
             }
         }
     }
-}
     /*public boolean isScheduleWithinOfficeHours(Schedule schedule, Integer office_id) {
         Office office = officeRepository.findOfficeById(office_id);
         if (office == null) {
@@ -324,5 +377,57 @@ public class BookingService {
         return true;
 }
      */
+
+    /*public void cncalBooking(Integer clinet_id,Integer booking_id,Integer office_id) { //List<Integer> schedules_id
+        Office office = officeRepository.findOfficeById(office_id);
+        Client client = clientRepository.findClientById(clinet_id);
+        Company company = companyRepository.findCompanyById(office.getCompany().getId());
+        if (office == null) {
+            throw new ApiException("office not found");
+        }
+        if (client == null) {
+            throw new ApiException("client not found");
+        }
+
+
+        Booking booking = new Booking();
+
+        booking.setOffice(office);
+        booking.setClient(client);
+        booking.setCompany(company);
+
+
+        List<Integer> schedules_id = scheduleDTO.getBookingSchedle();
+
+        Integer hours = schedules_id.size();
+        Double totalePrice = office.getPrice() * hours;
+        booking.setPrice(totalePrice);
+        booking.setCompanyName(office.getCompanyName());
+        booking.setStartDate(scheduleRepository.findScheduleById(schedules_id.get(0)).getStartDate());
+
+        booking.setEndDate(scheduleRepository.findScheduleById(schedules_id.get(schedules_id.size() - 1)).getStartDate().plusHours(1));
+        //booking.setStartDate(scheduleDTO.getEndDate());
+        booking.setReason(scheduleDTO.getReason());
+
+        bookingRepository.save(booking);
+
+        Booking booking1 = bookingRepository.findTopByOrderByIdDesc();
+
+        for (Integer id : schedules_id) {
+            Schedule schedule = scheduleRepository.findScheduleById(id);
+            if (scheduleRepository.findScheduleByOfficeAndId(office, id).getIsAvailable() == false) {
+                throw new ApiException("Unavailable time");
+            }
+
+            checkScheduleWithinOfficeHours(scheduleRepository.findScheduleByOfficeId(office.getId()), office.getId());
+
+            schedule.setBooking(booking1);
+        }
+
+        for (Integer id : schedules_id) {
+
+            scheduleRepository.findScheduleByOfficeAndId(office, id).setIsAvailable(false);}
+    }*/
+}
 
 

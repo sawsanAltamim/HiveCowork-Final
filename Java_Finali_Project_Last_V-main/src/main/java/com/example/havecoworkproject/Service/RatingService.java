@@ -77,8 +77,8 @@ public class RatingService {
         if (booking.getStutas().equals("Completed")) {
             List<Rating> ratings = ratingRepository.findRatingByOfficeId(office.getId());
             int totalRatings = ratings.size();
-            double sum = ratings.stream().mapToDouble(Rating::getNumRate).sum();
-            double avg = sum / totalRatings;
+            Double sum = ratings.stream().mapToDouble(Rating::getNumRate).sum();
+            Double avg = sum / totalRatings;
 
             office.setAvgRating(avg);
             officeRepository.save(office);

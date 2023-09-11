@@ -96,11 +96,11 @@ public class BookingController {
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("Booking marked as complete"));
     }
 
-    @PutMapping("/cancel-office-booking/{bookingId}")
-    public ResponseEntity<ApiResponse> cancelOfficeBooking(@AuthenticationPrincipal User user,@PathVariable Integer bookingId, @RequestBody List<Integer> scheduleIds, @RequestBody Integer officeId) {
+   /* @PutMapping("/cancel-office-booking/{bookingId}/{officeId}")
+    public ResponseEntity<ApiResponse> cancelOfficeBooking(@AuthenticationPrincipal User user,@PathVariable Integer bookingId, @PathVariable List<Integer> scheduleIds, @PathVariable Integer officeId) {
         bookingService.cancelOfficeBooking(user.getId(), bookingId, officeId, scheduleIds);
         return ResponseEntity.ok(new ApiResponse("Office booking canceled successfully"));
-    }
+    }*/
 
     /*@PostMapping("/check-schedule/{office_id}")
     public ResponseEntity checkScheduleWithinOfficeHours(@RequestBody Schedule schedule, @PathVariable Integer office_id) {

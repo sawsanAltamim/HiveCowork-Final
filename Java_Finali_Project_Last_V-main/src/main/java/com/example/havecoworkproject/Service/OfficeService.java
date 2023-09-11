@@ -46,7 +46,7 @@ public class OfficeService {
     }
 
     office.setCompany(company);
-   // office.setCompanyName(company.getNameCompany());
+    office.setCompanyName(company.getNameCompany());
     officeRepository.save(office);
   }
 

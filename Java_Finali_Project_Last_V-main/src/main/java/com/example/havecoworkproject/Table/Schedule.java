@@ -28,7 +28,7 @@ public class Schedule {
     @JsonFormat(pattern = "dd/MM/yyyy hh:mm:ss a")
     private LocalDateTime endDate;
     private Integer numTimeSlots;
-    @Column(columnDefinition = "boolean default false")
+    //@Column(columnDefinition = "boolean default false")
     private Boolean isAvailable = true;
 
     @ManyToOne
