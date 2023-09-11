@@ -52,6 +52,7 @@ public class RatingService {
 
         rating.setOffice(office);
         rating.setClient(client);
+        rating.setNumRate(rating.getNumRate());
         ratingRepository.save(rating);
         calculateAverageRating(client_id, rating.getId(),booking.getId());
     }
@@ -74,15 +75,22 @@ public class RatingService {
         }
         Booking booking=bookingRepository.findBookingById(booking_id);
         Office office = booking.getOffice();
-        if (booking.getStutas().equals("Completed")) {
+        if (!booking.getStutas().equals("Completed")) {
+            throw new ApiException("booking not Completed");
+        }
             List<Rating> ratings = ratingRepository.findRatingByOfficeId(office.getId());
-            int totalRatings = ratings.size();
-            Double sum = ratings.stream().mapToDouble(Rating::getNumRate).sum();
+            Integer totalRatings = ratings.size();
+            Double sum = 0.0;
+           // Double sum = ratings.stream().mapToDouble(Rating::getNumRate).sum();
+            for (Rating rating1 : ratings) {
+                sum += rating1.getNumRate();
+
+            }
             Double avg = sum / totalRatings;
 
             office.setAvgRating(avg);
             officeRepository.save(office);
-        }
+
 
     }
 //    public void assigRatingClient(Integer client_id, Integer rating_id) {

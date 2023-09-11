@@ -321,6 +321,9 @@ public class BookingService {
 
     public void cancelOfficeBooking(Integer client_id,Integer scheduleDTO, Integer bookingId, Integer officeId, List<Integer> scheduleIds) { // dpne
         Booking booking = bookingRepository.findBookingById(bookingId);
+        //ScheduleDTO scheduleDTO1 =
+
+
         if (booking == null) {
             throw new ApiException("Booking not found");
         }
