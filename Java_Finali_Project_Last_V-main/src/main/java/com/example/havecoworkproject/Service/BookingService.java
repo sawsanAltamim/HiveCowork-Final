@@ -191,7 +191,7 @@ public class BookingService {
         }
     }
 
-//
+
 //        Integer hours = schedules_id.size();
 //        Double totalePrice = office.getPrice() * hours;
 //        booking.setPrice(totalePrice);
@@ -247,7 +247,6 @@ public class BookingService {
         booking.setStutas("Cancel");
         scheduleRepository.findScheduleByOfficeAndId(office, schedule_id).setIsAvailable(true);
         bookingRepository.save(booking);
-
 
 }
 
@@ -372,11 +371,14 @@ public class BookingService {
         LocalDateTime bookingEndDate = booking.getEndDate();
 
         if (currentDateTime.isBefore(bookingEndDate)) {
-            booking.setStutas("Complete");
-            bookingRepository.save(booking);
+            if ("Confirm".equals(booking.getStutas())) {
+                booking.setStutas("Complete");
+                bookingRepository.save(booking);
+            } else {
+                throw new ApiException("Booking has not been confirmed, so its status cannot be changed to completed");
+            }
         } else {
             throw new ApiException("Booking has not ended yet");
-
         }
     }
 
@@ -470,6 +472,74 @@ public class BookingService {
         return true;
 }
      */
+
+    public void extendBooking(Integer clientId, ScheduleDTO scheduleDTO, Integer officeId) {
+        Office office = officeRepository.findOfficeById(officeId);
+        Client client = clientRepository.findClientById(clientId);
+
+        if (office == null) {
+            throw new ApiException("Office not found");
+        }
+        if (client == null) {
+            throw new ApiException("Client not found");
+        }
+
+        List<Integer> scheduleIds = scheduleDTO.getBookingSchedle();
+
+        if (scheduleIds.isEmpty()) {
+            throw new ApiException("No schedules provided for booking");
+        }
+
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        for (Integer scheduleId : scheduleIds) {
+            Schedule schedule = scheduleRepository.findScheduleById(scheduleId);
+
+            if (schedule == null) {
+                throw new ApiException("Schedule not found in the office");
+            }
+
+            if (schedule.getStartDate().isBefore(currentDateTime)) {
+                throw new ApiException("Cannot book past schedules");
+            }
+        }
+
+        Company company = companyRepository.findCompanyById(office.getCompany().getId());
+        Booking booking = new Booking();
+        if (booking.getStutas().equals("Confirm")) {
+            booking.setOffice(office);
+            booking.setClient(client);
+            booking.setCompany(company);
+
+            Double totalPrice = office.getPrice() * scheduleIds.size();
+            booking.setPrice(totalPrice);
+            booking.setCompanyName(office.getCompanyName());
+
+            Schedule firstSchedule = scheduleRepository.findScheduleById(scheduleIds.get(0));
+            booking.setStartDate(firstSchedule.getStartDate());
+
+            Schedule lastSchedule = scheduleRepository.findScheduleById(scheduleIds.get(scheduleIds.size() - 1));
+            LocalDateTime endDate = lastSchedule.getStartDate().plusHours(1);
+            booking.setEndDate(endDate);
+
+            booking.setReason(scheduleDTO.getReason());
+            bookingRepository.save(booking);
+
+            Booking savedBooking = bookingRepository.findTopByOrderByIdDesc();
+
+            //checkScheduleWithinOfficeHours(scheduleDTO,officeId);
+
+            for (Integer scheduleId : scheduleIds) {
+                Schedule schedule = scheduleRepository.findScheduleById(scheduleId);
+
+                if (!schedule.getIsAvailable()) {
+                    throw new ApiException("Unavailable time");
+                }
+                schedule.setIsAvailable(false);
+                schedule.setBooking(savedBooking);
+                scheduleRepository.save(schedule);
+            }
+        }
+    }
 }
 
 

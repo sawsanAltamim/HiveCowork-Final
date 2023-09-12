@@ -95,10 +95,11 @@ public class RatingService {
 //    }
 
     public void addRatingToOffice(Integer clientId, Integer officeId, Rating rating) {
+        // Find the office and client by their IDs
         Office office = officeRepository.findOfficeById(officeId);
         Client client = clientRepository.findClientById(clientId);
 
-
+        // Check if the client and office exist
         if (client == null) {
             throw new ApiException("Client not found");
         }
@@ -107,36 +108,35 @@ public class RatingService {
             throw new ApiException("Office not found");
         }
 
+        // Check if a booking exists for the given client and office
         Booking booking = bookingRepository.findBookingByOfficeIdAndClientId(officeId, clientId);
         if (booking == null) {
             throw new ApiException("You cannot rate this office without a booking");
         }
+
+        // Check if the booking is marked as "Complete"
         if (!booking.getStutas().equals("Complete")) {
             throw new ApiException("You can only rate an office after completing the booking");
         }
 
-
+        // Set the office and client for the rating
         rating.setOffice(office);
         rating.setClient(client);
 
-
+        // Save the rating
         ratingRepository.save(rating);
+
         calculateAverageRating(officeId);
     }
 
     public void calculateAverageRating(Integer officeId) {
-
         Office office = officeRepository.findOfficeById(officeId);
-
 
         if (office == null) {
             throw new ApiException("Office not found");
         }
 
-
         List<Rating> ratings = ratingRepository.findRatingByOfficeId(office.getId());
-
-
         if (!ratings.isEmpty()) {
             Integer totalRatings = ratings.size();
             Double sum = ratings.stream().mapToDouble(Rating::getNumRate).sum();

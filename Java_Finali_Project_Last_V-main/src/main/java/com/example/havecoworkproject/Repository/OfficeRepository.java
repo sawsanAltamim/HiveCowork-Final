@@ -23,4 +23,7 @@ public interface OfficeRepository extends JpaRepository<Office,Integer> {
             "ORDER BY AVG(r.numRate) DESC")
     List<Object[]> findAllOfficesWithAvgRatings();
 
+    List<Office> findOfficeByLocation(String location);
+
+    //List<Office> findOfficeBynAndCompanyName(String nameCompany);
 }

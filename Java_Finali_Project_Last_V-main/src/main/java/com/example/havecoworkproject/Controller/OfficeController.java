@@ -54,13 +54,19 @@ public class OfficeController {
         List<Office> sortedOffices = officeService.getAllOfficesOrderByRating();
         return ResponseEntity.status(HttpStatus.OK).body(sortedOffices);
     }
-
     @GetMapping("/all-sorted-by-price")
     public ResponseEntity getAllOfficesSortedByPrice() {
         List<Office> sortedOffices = officeService.getAllOfficesOrderByPrice();
         return ResponseEntity.status(HttpStatus.OK).body(sortedOffices);
     }
-
+    @GetMapping("/Search/{location}")
+    public ResponseEntity SearchLocation(@PathVariable String location) {
+        return ResponseEntity.status(200).body(officeService.SearchLocation(location));
+    }
+    /*@GetMapping("/Search/{nameCompany}")
+    public ResponseEntity SearchNameCompany(@PathVariable String nameCompany) {
+        return ResponseEntity.status(200).body(officeService.SearchNameCompany(nameCompany));
+    }*/
     /*@GetMapping("/Search/{numberPerson}")
     public ResponseEntity SearchNumberPerson(@PathVariable Integer numberPerson) {
         return ResponseEntity.status(200).body(officeService.SearchNumberPerson(numberPerson));

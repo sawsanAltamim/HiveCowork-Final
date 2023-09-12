@@ -22,26 +22,26 @@ public class Office {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
-    @Positive
+    @NotNull(message = "Price must not be null")
+    @Positive(message = "price must be positive")
     private Double price;
 
     private String companyName = "name";
 
-    @NotNull
+    @NotNull(message = "Number Person must not be null")
     private Integer numberPerson;
 
-    @NotEmpty
+    @NotEmpty(message = "category must not be empty")
     @Column(columnDefinition = "varchar(20)  not null check(category='Private Office' or category='Dedicated Desk' or category='Meeting Room')")
     private String category;
 
-    @NotEmpty
+    @NotEmpty(message = "Location must not be empty")
     private String location;
 
-    @NotEmpty
+    @NotEmpty(message = "Address must not be empty")
     private String address;
 
-    private Double avgRating = 0.0;
+    private Double avgRating = 3.5;
 
     @OneToMany( cascade = CascadeType.ALL, mappedBy = "office")
     private Set<Services> service;

@@ -27,8 +27,6 @@ public class ConfigurationSecurity {
     }
 
 
-
-
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http)
             throws Exception{
@@ -38,10 +36,48 @@ public class ConfigurationSecurity {
                 .and()
                 .authenticationProvider(daoAuthenticationProvider())
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST,"/api/v1/auth/registerClinet").permitAll()
-                .requestMatchers ("/api/v1/auth/registerCompany").permitAll()
-                //.requestMatchers ("/api/v1/auth/registerCompany").hasAuthority("COMPANY")
-                .anyRequest().permitAll()
+                .requestMatchers(HttpMethod.POST,"/api/v1/hive_cowork/auth/register/client").permitAll()
+                .requestMatchers ("/api/v1/hive_cowork/auth/register/company").permitAll()
+                .requestMatchers ("/api/v1/hive_cowork/auth/register/admin").permitAll()
+                .requestMatchers ("/api/v1/auth/get_order_company_register").hasAuthority("ADMIN")
+                .requestMatchers ("/api/v1/auth//confirm_company_account/{company_id}").hasAuthority("ADMIN")
+                .requestMatchers ("/api/v1/auth/reject_company_account/{company_id}").hasAuthority("ADMIN")
+                .requestMatchers ("/api/v1/hive_cowork/company/get").hasAuthority("ADMIN")
+                .requestMatchers ("/api/v1/hive_cowork/client/get").hasAuthority("ADMIN")
+                .requestMatchers ("/api/v1/hive_cowork/office/get_by_company").hasAuthority("COMPANY")
+                .requestMatchers ("/api/v1/hive_cowork/office/add").hasAuthority("COMPANY")
+                .requestMatchers ("/api/v1/hive_cowork/office/update/{office_id}").hasAuthority("COMPANY")
+                .requestMatchers ("/api/v1/hive_cowork/office/delete/{office_id}").hasAuthority("COMPANY")
+                .requestMatchers ("/api/v1/hive_cowork/schedule/update/{office_id}/{schedule_id}").hasAuthority("COMPANY")
+                .requestMatchers ("/api/v1/hive_cowork/schedule/delete/{office_id}/{schedule_id}").hasAuthority("COMPANY")
+                .requestMatchers ("/api/v1/hive_cowork/schedule/add-times/{office_id}").hasAuthority("COMPANY")
+                .requestMatchers ("api/v1/hive_cowork/services/add/{office_id}").hasAuthority("COMPANY")
+                .requestMatchers ("api/v1/hive_cowork/services/update/{service_id}").hasAuthority("COMPANY")
+                .requestMatchers ("api/v1/hive_cowork/services/delete/{service_id}").hasAuthority("COMPANY")
+                .requestMatchers ("/api/v1/hive_cowork/booking/get_by_company").hasAuthority("COMPANY")
+                .requestMatchers ("/api/v1/hive_cowork/booking/update/{booking_id}").hasAuthority("COMPANY")//CONFIRM BOOKING
+                .requestMatchers ("/api/v1/hive_cowork/booking/delete/{booking_id}/{office_id}/{schedule_id}").hasAuthority("COMPANY")//REJECT BOOKING
+                .requestMatchers ("/api/v1/hive_cowork/rating/get_by_office/{office_id}").hasAuthority("COMPANY")
+                .requestMatchers ("/api/v1/hive_cowork/booking/get_by_user").hasAuthority("CLIENT")
+                .requestMatchers ("/api/v1/hive_cowork/booking/add/{office_id}").hasAuthority("CLIENT")
+                .requestMatchers ("/api/v1/hive_cowork/booking/cancel-office-booking/{booking_id}").hasAuthority("CLIENT")
+                .requestMatchers ("/api/v1/hive_cowork/rating/add/{office_id}").hasAuthority("CLIENT")
+                .requestMatchers ("/api/v1/hive_cowork/office/get").permitAll()
+                .requestMatchers ("/api/v1/hive_cowork/office/all-sorted-by-rating").permitAll()
+                .requestMatchers ("/api/v1/hive_cowork/schedule/get/{office_id}").permitAll()
+                .requestMatchers ("/api/v1/hive_cowork/services/get_by_Office/{office_id}").permitAll()
+                .requestMatchers ("/api/v1/hive_cowork/client/Search/{numberPerson}").permitAll()
+
+                .anyRequest().authenticated()
+//                .requestMatchers ("/api/v1/hive_cowork/booking/bookings-pending/{client_id}").authenticated()
+
+                //                .requestMatchers ("/api/v1/hive_cowork/booking/bookings-complete").authenticated()
+//                .requestMatchers ("/api/v1/hive_cowork/booking/bookings-cancel/{client_id}").authenticated()
+//                .requestMatchers ("/api/v1/hive_cowork/booking/bookings-confirm/{client_id}").authenticated()
+//                .requestMatchers ("/api/v1/hive_cowork/booking/newExtendBooking/{office_id}/{booking_id}/{schedule_id}").authenticated()
+
+//
+                //.anyRequest().authenticated()
                 //.anyRequest().authenticated()
                 .and()
                 .logout().logoutUrl("/api/vi/auth/logout")
@@ -50,7 +86,5 @@ public class ConfigurationSecurity {
                 .and ()
                 .httpBasic() ;
         return http.build();
-
     }
-
 }

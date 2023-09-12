@@ -106,4 +106,13 @@ public class BookingController {
         bookingService.isScheduleWithinOfficeHours(schedule, office_id);
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("Schedule is within office hours"));
     }*/
+
+    @PostMapping("/extendBooking/{office_id}")
+    public ResponseEntity extendBooking(@AuthenticationPrincipal User user, @RequestBody @Valid ScheduleDTO scheduleDTO, @PathVariable Integer office_id){
+
+        bookingService.extendBooking(user.getId(),scheduleDTO,office_id);
+        return ResponseEntity.status(200).body(new ApiResponse("added successfully"));
+
+    }
+
 }

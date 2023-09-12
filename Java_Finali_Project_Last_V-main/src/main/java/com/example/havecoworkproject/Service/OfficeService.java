@@ -114,4 +114,20 @@ public class OfficeService {
 
     return offices;
   }
+
+  public List<Office> SearchLocation(String location){
+    List<Office> offices=officeRepository.findOfficeByLocation(location);
+    if (offices == null) {
+      throw new ApiException(" Location not found");
+    }
+    return offices;
+  }
+
+  /*public List<Office> SearchNameCompany(String nameCompany){
+    List<Office> offices=officeRepository.findOfficeBynAndCompanyName(nameCompany);
+    if (offices == null) {
+      throw new ApiException(" Name company not found");
+    }
+    return offices;
+  }*/
 }
