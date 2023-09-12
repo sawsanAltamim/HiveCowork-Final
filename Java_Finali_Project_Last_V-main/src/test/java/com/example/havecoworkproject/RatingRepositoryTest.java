@@ -32,8 +32,8 @@ public class RatingRepositoryTest {
        // company=new Company(null,"non",true,"A1212","good",null,null,null);
         office=new Office(null,12.3,"non",12,"","12AA","qq",12.3,null,null,null,null,null);
        // user = new User(1,"suu1n","12345","CLIENT","sawsan@gmail.com","0561037115",client,company);
-        rating1=new Rating(null,12,office,null);
-        rating2=new Rating(null,13,office,null);
+        rating1=new Rating(null,12.7,office,null);
+        rating2=new Rating(null,13.5,office,null);
         ratingRepository.saveAll(List.of(rating2,rating1));
 
     }
