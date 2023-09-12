@@ -16,13 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ScheduleDTO {
 
-
-
-    private Integer id;
-
     private List<Integer> bookingSchedle;
-
-
 
     private String companyName = "name";
 

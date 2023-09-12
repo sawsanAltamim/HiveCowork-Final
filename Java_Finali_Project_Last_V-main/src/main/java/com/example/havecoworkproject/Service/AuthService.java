@@ -34,13 +34,13 @@ public class AuthService {
         authRepository.save(user);
 
     }
-    public void registerAdmin(User user) {
-        String hash = new BCryptPasswordEncoder().encode(user.getPassword());
-        user.setPassword(hash);
-            user.setRole("ADMIN");
-        authRepository.save(user);
-
-    }
+//    public void registerAdmin(User user) {
+//        String hash = new BCryptPasswordEncoder().encode(user.getPassword());
+//        user.setPassword(hash);
+//            user.setRole("ADMIN");
+//        authRepository.save(user);
+//
+//    }
     //Admin
     public List<Company> getAllOrderCompanyRegister(){
         return companyRepository.findCompaniesByAcceptable(false);

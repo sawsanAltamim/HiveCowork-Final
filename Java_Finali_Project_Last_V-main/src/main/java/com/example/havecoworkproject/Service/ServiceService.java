@@ -19,9 +19,6 @@ public class ServiceService {
     private final ServiceRepository serviceRepository;
     private final OfficeRepository officeRepository;
     private final CompanyRepository companyRepository;
-   // public List<Services> getAllServices(){
-       // return serviceRepository.findAll();
-   // }
 
     public List<Services> getServicesByOffice(Integer company_id, Integer office_id){
         Company company = companyRepository.findCompanyById(company_id);

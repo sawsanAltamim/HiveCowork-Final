@@ -122,12 +122,4 @@ public class OfficeService {
     }
     return offices;
   }
-
-  /*public List<Office> SearchNameCompany(String nameCompany){
-    List<Office> offices=officeRepository.findOfficeBynAndCompanyName(nameCompany);
-    if (offices == null) {
-      throw new ApiException(" Name company not found");
-    }
-    return offices;
-  }*/
 }

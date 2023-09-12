@@ -24,15 +24,6 @@ public class ClientService {
     public List<Client> getAllClient(){
         return clientRepository.findAll();
     }
-    /*public void addClient(Integer user_id,ClientDTO clientDTO) { // done
-        User user = authRepository.findUserById(user_id);
-        if (user == null) {
-            throw new ApiException("Client not found");
-        }
-        Client client = new Client(null, clientDTO.getNameClient(),clientDTO.getAge(),user,null,null);
-
-        clientRepository.save(client);
-    }*/
 
     public Client addClient(Integer user_id, ClientDTO clientDTO) {
         User user = authRepository.findUserById(user_id);
@@ -72,7 +63,6 @@ public class ClientService {
         if(client == null){
             throw new ApiException("Client not found");
         }
-        //User user = authRepository.findUserById(user_id);
         if(!client.getUser().getClient().getId().equals(user_id)){
             throw new ApiException("Assess denied");
         }

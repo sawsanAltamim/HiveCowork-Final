@@ -59,6 +59,8 @@ public class Booking {
     @JsonIgnore
     private Company company;
 
+    private Boolean isRating=false;
+
     @ManyToOne
     @JoinColumn(name = "office_id",referencedColumnName = "id")
     @JsonIgnore

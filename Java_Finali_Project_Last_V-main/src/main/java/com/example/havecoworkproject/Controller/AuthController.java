@@ -32,11 +32,11 @@ public class AuthController {
 
 
 
-    @PostMapping("/register/admin")
-    public ResponseEntity registerAdmin(@RequestBody @Valid User user){
-        authService.registerAdmin(user);
-        return ResponseEntity.status(200).body(new ApiResponse("Admin added successfully"));
-    }
+//    @PostMapping("/register/admin")
+//    public ResponseEntity registerAdmin(@RequestBody @Valid User user){
+//        authService.registerAdmin(user);
+//        return ResponseEntity.status(200).body(new ApiResponse("Admin added successfully"));
+//    }
 
     @GetMapping("/get_order_company_register")
     public ResponseEntity getAllOrderCompanyRegister(){
