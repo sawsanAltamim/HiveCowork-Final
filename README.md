@@ -30,7 +30,7 @@ The part I worked on:
 -Security Client, Company, Schdule
 -Controller Client,Comapny, Schdule
 -Repository Client, Company, Scdule
--Endpoient in BookingService: cancelOfficeBooking, BookingIsComplete , getAllPendingBookingsByClientId , getAllConfirmBookingsByClientId , getAllCancelBookingsByClientId , getAllCompleteBookingsByClientId 
-- newBooking I added From line 52 to line 62 , modified on line 87 to line 96
-- Endpoient in OfficeService: getAllOfficesOrderByRating, getAllOfficesOrderByPrice
-- a test 5 service
+-Endpoient in BookingService: cancelOfficeBooking, BookingIsComplete , getAllPendingBookingsByClientId , getAllConfirmBookingsByClientId , getAllCancelBookingsByClientId , getAllCompleteBookingsByClientId
+-newBooking I added From line 52 to line 62 , modified on line 87 to line 96
+-Endpoient in OfficeService: getAllOfficesOrderByRating, getAllOfficesOrderByPrice
+-a test 5 service
